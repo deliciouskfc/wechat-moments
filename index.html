@@ -2,6 +2,9 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#191919">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -76,7 +79,7 @@
   .p2-head{
     flex:none; position:relative; width:100%;
     height:calc(var(--u) * 300);
-    background:url("assets/p2_header.jpg") center/100% 100% no-repeat;
+    background:url("assets/p2_header.jpg?v=4") center/100% 100% no-repeat;
   }
   .back-hit{
     position:absolute; z-index:6; background:transparent; border:0; padding:0;
@@ -152,14 +155,14 @@
   <!-- ============ 页面一 ============ -->
   <div class="screen on" id="page1">
     <div class="stage">
-      <img class="a-top"    src="assets/p1_top.jpg"    alt="">
-      <img class="a-sign"   src="assets/p1_sign.jpg"   alt="">
-      <img class="a-rowtop" src="assets/p1_row_top.jpg" alt="">
-      <img class="a-today"  src="assets/p1_label_today.jpg" alt="">
-      <img class="a-cam"    src="assets/p1_cam.jpg"    alt="">
-      <img class="a-post1"  src="assets/p1_post1.jpg"  alt="">
-      <img class="a-post2"  src="assets/p1_post2.jpg"  alt="">
-      <img class="a-bottom"  src="assets/p1_bottom.jpg"  alt="">
+      <img class="a-top"    src="assets/p1_top.jpg?v=4"    alt="">
+      <img class="a-sign"   src="assets/p1_sign.jpg?v=4"   alt="">
+      <img class="a-rowtop" src="assets/p1_row_top.jpg?v=4" alt="">
+      <img class="a-today"  src="assets/p1_label_today.jpg?v=4" alt="">
+      <img class="a-cam"    src="assets/p1_cam.jpg?v=4"    alt="">
+      <img class="a-post1"  src="assets/p1_post1.jpg?v=4"  alt="">
+      <img class="a-post2"  src="assets/p1_post2.jpg?v=4"  alt="">
+      <img class="a-bottom"  src="assets/p1_bottom.jpg?v=4"  alt="">
 
       <!-- 99赞 → 详情页 -->
       <a class="hit" id="hitLike" href="#detail" onclick="return go(event)"></a>
@@ -177,23 +180,23 @@
 
     <div class="p2-scroll">
       <div class="p2-post">
-        <img src="assets/p2_post.jpg" alt="">
+        <img src="assets/p2_post.jpg?v=4" alt="">
         <a class="hit" id="hitCard2" href="https://mp.weixin.qq.com/s/BXnv-J35n2pMDfD9xhwR3A"
            target="_blank" rel="noopener noreferrer"></a>
       </div>
 
       <div class="p2-timerow">
-        <img src="assets/p2_time.jpg" alt="昨天 23:59">
+        <img src="assets/p2_time.jpg?v=4" alt="昨天 23:59">
       </div>
 
       <div class="likes">
-        <img class="heart" src="assets/p2_heart.jpg" alt="">
+        <img class="heart" src="assets/p2_heart.jpg?v=4" alt="">
         <div class="like-grid" id="likeGrid"></div>
       </div>
     </div>
 
     <div class="p2-foot">
-      <img class="bar" src="assets/p2_bottombar.jpg" alt="">
+      <img class="bar" src="assets/p2_bottombar.jpg?v=4" alt="">
       <div class="gesture"></div>
     </div>
   </div>
@@ -208,7 +211,7 @@
     var frag = document.createDocumentFragment();
     for (var i = 1; i <= 100; i++) {
       var img = document.createElement('img');
-      img.src = 'avatars/av' + String(i).padStart(3, '0') + '.jpg';
+      img.src = 'avatars/av' + String(i).padStart(3, '0') + '.jpg?v=4';
       img.alt = '';
       img.loading = 'lazy';
       frag.appendChild(img);
