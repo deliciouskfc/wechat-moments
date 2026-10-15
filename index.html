@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#191919">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>朋友圈 · 详情</title>
+<style>
+  :root{
+    /* 容器宽度 = 视口宽（最大 460px）；--u 表示截图 1200 空间里的 1px */
+    --w: min(100vw, 460px);
+    --u: calc(var(--w) / 1200);
+    --bg1: #191919;
+    --bg2: #202020;
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ height:100%; margin:0; padding:0; background:#000; }
+  body{
+    font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,"Noto Sans SC",sans-serif;
+    overflow:hidden;
+  }
+
+  /* ---------- 全屏容器 ---------- */
+  .app{
+    position:relative;
+    width:var(--w);
+    height:100vh;
+    height:100dvh;
+    margin:0 auto;
+    background:var(--bg1);
+    overflow:hidden;
+  }
+  .screen{ position:absolute; inset:0; display:none; }
+  #page1{ background:var(--bg1); overflow-y:auto; overflow-x:hidden;
+          -webkit-overflow-scrolling:touch; }
+  #page1.on{ display:block; }
+  #page2{ background:var(--bg2); }
+  #page2.on{ display:flex; flex-direction:column; }
+  .screen::-webkit-scrollbar, .p2-scroll::-webkit-scrollbar{ width:0; height:0; }
+
+  /* ================= 页面一：朋友圈主页 ================= */
+  #page1 .stage{
+    position:relative; width:100%;
+    aspect-ratio:1200 / 2608;
+    background:var(--bg1);
+  }
+  #page1 .stage img{ position:absolute; display:block; height:auto; }
+  .a-top       { left:0;      top:0;       width:100%;   }
+  .a-sign      { left:35.83%; top:41.72%;  width:64.17%; }
+  .a-rowtop    { left:1.67%;  top:48.24%;  width:97.08%; }
+  .a-today     { left:2.08%;  top:67.18%;  width:15%;    }
+  .a-cam       { left:20.67%; top:66.87%;  width:22.67%; }
+  .a-post1     { left:15.42%; top:78.91%;  width:80%;    }
+  .a-post2     { left:16.25%; top:89.65%;  width:78.33%; }
+  .a-left      { left:0;      top:75.767%; width:4%;    }
+  .a-bottom    { left:0;      top:97.470%; width:100%;  }
+
+  .gesture{
+    position:absolute; left:35%; width:30%;
+    border-radius:99px; background:#d8d8d8; opacity:.85;
+  }
+  /* 点击热区 */
+  .hit{
+    position:absolute; display:block; z-index:5;
+    cursor:pointer; border-radius:calc(var(--u) * 16);
+    transition:background .12s ease;
+  }
+  .hit:active{ background:rgba(255,255,255,.07); }
+  /* 「99赞」那一排 → 进入详情 */
+  #hitLike{ left:18%; top:78.98%; width:82%; height:2.65%; }
+  /* 下面的链接卡片 → 打开公众号文章 */
+  #hitLink{ left:21%; top:82.35%; width:79%; height:6.05%; }
+
+  /* ================= 页面二：详情 ================= */
+  .p2-head{
+    flex:none; position:relative; width:100%;
+    height:calc(var(--u) * 300);
+    background:url("assets/p2_header.jpg") center/100% 100% no-repeat;
+  }
+  .back-hit{
+    position:absolute; z-index:6; background:transparent; border:0; padding:0;
+    left:calc(var(--u) * 25); top:calc(var(--u) * 159);
+    width:calc(var(--u) * 158); height:calc(var(--u) * 134);
+    cursor:pointer; border-radius:calc(var(--u) * 20);
+    transition:background .12s ease;
+  }
+  .back-hit:active{ background:rgba(255,255,255,.09); }
+
+  .p2-scroll{
+    flex:1 1 auto; overflow-y:auto; overflow-x:hidden;
+    -webkit-overflow-scrolling:touch; background:var(--bg2);
+  }
+
+  .p2-post{ position:relative; margin-top:calc(var(--u) * 15); }
+  .p2-post img{ display:block; width:100%; height:auto; }
+  /* 详情里那张链接卡片 */
+  #hitCard2{
+    left:16.5%; top:45.2%; width:77.5%; height:32.8%;
+  }
+
+  .p2-timerow{ margin-top:calc(var(--u) * 27); }
+  .p2-timerow img{ display:block; width:100%; height:auto; }
+
+  .likes{
+    position:relative; margin-top:calc(var(--u) * 43);
+    padding-left:calc(var(--u) * 186);
+    padding-bottom:calc(var(--u) * 90);
+  }
+  .likes .heart{
+    position:absolute; left:calc(var(--u) * 72); top:calc(var(--u) * 19);
+    width:calc(var(--u) * 76); height:auto; display:block;
+  }
+  .like-grid{
+    display:grid;
+    grid-template-columns:repeat(9, calc(var(--u) * 96));
+    column-gap:calc(var(--u) * 12);
+    row-gap:calc(var(--u) * 18);
+  }
+  .like-grid img{
+    width:calc(var(--u) * 96); height:calc(var(--u) * 96);
+    display:block; object-fit:cover; background:#2a2a2a;
+    border-radius:calc(var(--u) * 3);
+  }
+
+  .p2-foot{
+    flex:none; position:relative; width:100%;
+    height:calc(var(--u) * 223); background:var(--bg2);
+  }
+  .p2-foot .bar{ display:block; width:100%; height:auto; }
+  .p2-foot .gesture{
+    position:absolute; bottom:calc(var(--u) * 12); left:33.3%; width:33.4%;
+    height:calc(var(--u) * 14);
+  }
+
+  /* 切页动画 */
+  #page2.slide-in{ animation:slideIn .24s ease both; }
+  @keyframes slideIn{ from{ transform:translateX(14%); opacity:.4 } to{ transform:none; opacity:1 } }
+  #page1.slide-back{ animation:slideBack .24s ease both; }
+  @keyframes slideBack{ from{ transform:translateX(-10%); opacity:.5 } to{ transform:none; opacity:1 } }
+
+  /* 桌面预览时给个居中留白的观感 */
+  @media (min-width:461px){
+    body{ background:#0c0c0c; }
+    .app{ box-shadow:0 0 0 1px #2a2a2a; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- ============ 页面一 ============ -->
+  <div class="screen on" id="page1">
+    <div class="stage">
+      <img class="a-top"    src="assets/p1_top.jpg"    alt="">
+      <img class="a-sign"   src="assets/p1_sign.jpg"   alt="">
+      <img class="a-rowtop" src="assets/p1_row_top.jpg" alt="">
+      <img class="a-today"  src="assets/p1_label_today.jpg" alt="">
+      <img class="a-cam"    src="assets/p1_cam.jpg"    alt="">
+      <img class="a-post1"  src="assets/p1_post1.jpg"  alt="">
+      <img class="a-post2"  src="assets/p1_post2.jpg"  alt="">
+      <img class="a-left"    src="assets/p1_left.jpg"    alt="">
+      <img class="a-bottom"  src="assets/p1_bottom.jpg"  alt="">
+
+      <!-- 99赞 → 详情页 -->
+      <a class="hit" id="hitLike" href="#detail" onclick="return go(event)"></a>
+      <!-- 下方链接卡片 → 公众号文章 -->
+      <a class="hit" id="hitLink" href="https://mp.weixin.qq.com/s/BXnv-J35n2pMDfD9xhwR3A"
+         target="_blank" rel="noopener noreferrer"></a>
+    </div>
+  </div>
+
+  <!-- ============ 页面二 ============ -->
+  <div class="screen" id="page2">
+    <div class="p2-head">
+      <button class="back-hit" id="backBtn" aria-label="返回"></button>
+    </div>
+
+    <div class="p2-scroll">
+      <div class="p2-post">
+        <img src="assets/p2_post.jpg" alt="">
+        <a class="hit" id="hitCard2" href="https://mp.weixin.qq.com/s/BXnv-J35n2pMDfD9xhwR3A"
+           target="_blank" rel="noopener noreferrer"></a>
+      </div>
+
+      <div class="p2-timerow">
+        <img src="assets/p2_time.jpg" alt="昨天 23:59">
+      </div>
+
+      <div class="likes">
+        <img class="heart" src="assets/p2_heart.jpg" alt="">
+        <div class="like-grid" id="likeGrid"></div>
+      </div>
+    </div>
+
+    <div class="p2-foot">
+      <img class="bar" src="assets/p2_bottombar.jpg" alt="">
+      <div class="gesture"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var ARTICLE = 'https://mp.weixin.qq.com/s/BXnv-J35n2pMDfD9xhwR3A';
+
+  // 100 个点赞头像
+  (function () {
+    var grid = document.getElementById('likeGrid');
+    var frag = document.createDocumentFragment();
+    for (var i = 1; i <= 100; i++) {
+      var img = document.createElement('img');
+      img.src = 'avatars/av' + String(i).padStart(3, '0') + '.jpg';
+      img.alt = '';
+      img.loading = 'lazy';
+      frag.appendChild(img);
+    }
+    grid.appendChild(frag);
+  })();
+
+  var p1 = document.getElementById('page1');
+  var p2 = document.getElementById('page2');
+  var scrollBox = document.querySelector('.p2-scroll');
+
+  function showDetail() {
+    p1.classList.remove('on', 'slide-back');
+    p2.classList.add('on', 'slide-in');
+    setTimeout(function () { p2.classList.remove('slide-in'); }, 260);
+    scrollBox.scrollTop = 0;
+  }
+  function showHome() {
+    p2.classList.remove('on', 'slide-in');
+    p1.classList.add('on', 'slide-back');
+    setTimeout(function () { p1.classList.remove('slide-back'); }, 260);
+    p1.scrollTop = 0;
+  }
+
+  // 99赞：进详情页（不用跳转 hash）
+  function go(e) {
+    e.preventDefault();
+    showDetail();
+    return false;
+  }
+
+  document.getElementById('backBtn').addEventListener('click', showHome);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') showHome();
+  });
+
+  if (location.hash === '#detail') showDetail();
+  window.addEventListener('hashchange', function () {
+    location.hash === '#detail' ? showDetail() : showHome();
+  });
+</script>
+</body>
+</html>
